@@ -1,0 +1,12 @@
+# Phase-0 environment — pinned to the wheels resolved on Windows / CPython 3.13.
+# Core kernel + verifier need only numpy/scipy/networkx/scikit-learn.
+# GraphRicciCurvature brings POT (optimal transport), networkit, cvxpy.
+# QuTiP is OPTIONAL (an extra independent cross-check) — see requirements-quantum.txt.
+numpy==2.5.0
+scipy==1.18.0
+networkx==3.6.1
+scikit-learn==1.9.0
+matplotlib==3.11.0
+pytest==9.1.1
+POT==0.9.6.post1
+GraphRicciCurvature==0.4.5

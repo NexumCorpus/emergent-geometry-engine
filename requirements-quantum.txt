@@ -1,0 +1,7 @@
+# Optional: QuTiP provides a THIRD independent cross-check of the free-fermion entropy
+# (Peschel <-> QuTiP exact ptrace). The core verifier does NOT need it — verify/ed.py
+# (pure-numpy exact diagonalization) is the guaranteed independent check.
+#
+# Research correction: the Constitution's "numpy<2.0" pin is STALE. QuTiP 5.3.0 ships a
+# cp313 win_amd64 wheel and supports numpy 2.x (verified on numpy 2.5.0 / scipy 1.18.0).
+qutip==5.3.0
