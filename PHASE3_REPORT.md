@@ -96,6 +96,47 @@ claim); the τ search gives the hyperbolic side a discrete free parameter the Eu
 side does not need (mitigated by Euclidean scale-invariance, but the df asymmetry stands);
 graphs remain small. A pre-registered version belongs in any follow-up sweep.
 
+## Sweep v2 + finite-size scaling (2026-07-02/03 — analysis tools frozen BEFORE v2 data)
+
+Sweep v2: four sizes (L = 32/48/64/96), 15 rates densified near the transition, 200
+trajectories per point (`artifacts/mipt_sweep_v2/`, same seed scheme). The FSS tools
+(`experiments/mipt/fss.py`: pairwise crossings; one- and two-exponent collapse fits,
+synthetic-graded incl. a no-false-collapse negative control) were built and committed
+before this data existed — this section is the pre-registered quantitative test.
+
+**I₃ control — a clean quantitative scaling story:**
+- Six pairwise crossings: **p_c = 0.134 ± 0.005** (median 0.135; the one outlier, 0.147,
+  is the smallest-size pair).
+- Plain collapse: p_c = 0.141, ν ≈ 2.1, quality 0.0008 — two orders of magnitude better
+  than any geometric observable. (ν is fit over the full wing range with a one-parameter
+  form and is ensemble-specific; it is an internal consistency number, not a literature
+  comparison.)
+
+**Geometric observables — the quantitative upgrade is NOT earned:**
+
+| observable | amp-form fit p_c | ν | quality | verdict |
+|---|---|---|---|---|
+| spectral_dim | 0.099 | 3.3 (rail) | 0.168 | no collapse |
+| forman_mean | 0.065 | 1.08 | 0.057 | parameters absorb non-critical structure |
+| delta_norm | 0.185 | 2.2 | 0.121 | no collapse |
+| lr_edges | 0.204 | 3.2 (rail) | 0.041 | fair q, p_c inconsistent |
+
+Fitted critical points scatter across 0.065–0.204 (none consistent with I₃'s 0.134),
+exponents rail at grid edges, qualities are 50–200× worse than the control's. Meanwhile
+the QUALITATIVE picture strengthened at the fourth size: d_s peak 0.54→0.65→0.70→0.775,
+Forman minimum 0.67→0.61→0.53→0.41, long-range edges 1.7→2.3→3.0→4.45, and every
+feature's position drifts toward the I₃ p_c as L grows.
+
+**Verdict (pre-stated gate honored):** the geometric observables of the block-MI graph
+LOCATE the transition and strengthen with system size, but do NOT exhibit clean one- or
+two-exponent critical scaling at these graph sizes (8–24 nodes). "Order parameter"
+language therefore stays qualitative; **no quantitative-scaling claim is issued.** Likely
+obstructions, for any follow-up: tiny graphs (corrections to scaling dominate), the
+block coarse-graining mixes scales, and the observables are bounded nonlinear
+functionals of the correlation structure. The certified claim
+`ege-phase3-mipt-geometry-v1` (qualitative extrema + I₃ phases) is CONFIRMED by v2 at a
+fourth size and stands unchanged.
+
 ## Reproduce
 
 ```
