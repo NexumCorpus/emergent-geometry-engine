@@ -54,6 +54,26 @@ def test_fit_recovers_known_exponents():
     assert np.isfinite(q)
 
 
+def test_fit_amplitude_recovers_known_exponents():
+    # Peaked observable whose height GROWS with L: O = L^a * f((p-p_c)L^(1/nu)).
+    # This is the form the plain fit cannot handle (v1 preview: d_s quality 0.32,
+    # nu railing) — the amplitude fit must recover all three parameters.
+    from experiments.mipt.fss import fit_collapse_amp
+    rng = np.random.default_rng(5)
+    ps = np.linspace(0.05, 0.20, 31)
+    p_c, nu, a = 0.13, 1.2, 0.35
+    data = {}
+    for L in (32, 48, 64, 96):
+        x = (ps - p_c) * L ** (1.0 / nu)
+        y = L ** a * np.exp(-x ** 2) + 0.01 * rng.standard_normal(len(ps))
+        data[L] = (ps, y)
+    fpc, fnu, fa, q = fit_collapse_amp(data)
+    assert fpc == pytest.approx(0.13, abs=0.01)
+    assert fnu == pytest.approx(1.2, abs=0.4)
+    assert fa == pytest.approx(0.35, abs=0.15)
+    assert q < 0.05
+
+
 def test_no_false_collapse_on_structureless_data():
     # Independent noise per size: no scaling form exists. The fitted collapse
     # quality must be clearly worse than for genuinely-scaling data.

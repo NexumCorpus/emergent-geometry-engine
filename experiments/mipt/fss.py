@@ -100,6 +100,45 @@ def collapse_quality(data: dict, p_c: float, nu: float,
     return (total / cnt) / var
 
 
+def collapse_quality_amp(data: dict, p_c: float, nu: float, a: float,
+                         min_overlap: int = 10) -> float:
+    """`collapse_quality` for the two-exponent form O = L^a * f((p-p_c)L^(1/nu)):
+    divide each size's O by L^a, then score the plain collapse."""
+    resc = {L: (p, np.asarray(y, float) / L ** a) for L, (p, y) in data.items()}
+    return collapse_quality(resc, p_c, nu, min_overlap)
+
+
+def fit_collapse_amp(data: dict):
+    """Grid-search (p_c, nu, a) for the amplitude form — needed when the
+    observable's feature height itself scales with L (v1 preview: d_s and
+    Forman do; the plain form cannot collapse them by construction).
+    Returns (p_c, nu, a, quality)."""
+    ps_all = np.concatenate([np.asarray(p, float) for p, _ in data.values()])
+    lo, hi = float(ps_all.min()), float(ps_all.max())
+    span = hi - lo
+
+    def search(pcs, nus, aa):
+        best = (None, None, None, float("inf"))
+        for av in aa:
+            resc = {L: (p, np.asarray(y, float) / L ** av)
+                    for L, (p, y) in data.items()}
+            for pc in pcs:
+                for nu in nus:
+                    q = collapse_quality(resc, pc, nu)
+                    if q < best[3]:
+                        best = (float(pc), float(nu), float(av), float(q))
+        return best
+
+    pcs = np.linspace(lo + 0.05 * span, hi - 0.05 * span, 30)
+    nus = np.linspace(0.5, 3.0, 26)
+    aa = np.linspace(-1.0, 1.0, 21)
+    pc0, nu0, a0, _ = search(pcs, nus, aa)
+    pcs = np.linspace(pc0 - 0.03 * span, pc0 + 0.03 * span, 25)
+    nus = np.linspace(max(0.3, nu0 - 0.3), nu0 + 0.3, 25)
+    aa = np.linspace(a0 - 0.1, a0 + 0.1, 11)
+    return search(pcs, nus, aa)
+
+
 def fit_collapse(data: dict):
     """Grid-search (p_c, nu) minimizing `collapse_quality`; coarse pass then a
     local refinement. Returns (p_c, nu, quality)."""
