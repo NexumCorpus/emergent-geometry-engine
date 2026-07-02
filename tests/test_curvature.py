@@ -35,13 +35,19 @@ def test_forman_augmented_closed_form():
 
 def test_forman_augmented_matches_library():
     # Independent grader: the GraphRicciCurvature library (separate implementation).
-    # Installed 0.4.5 computes the AUGMENTED Forman variant by default (verified: its
-    # output matches our 3T+4-deg-deg formula on every karate-club edge).
+    # The comparison is between UNWEIGHTED augmented Forman implementations, so the
+    # karate-club weights must be stripped: library 0.4.5 ignored pre-existing edge
+    # weights, but 0.5.x consumes them when present (karate carries weight=4 etc.),
+    # which silently switched the library to the weighted variant (KNOWN-STATE.md
+    # failure, diagnosed 2026-07-02: kernel correct, dep drift).
     from GraphRicciCurvature.FormanRicci import FormanRicci
 
     G = nx.karate_club_graph()
     mine = forman_ricci(G, method="augmented")
-    frc = FormanRicci(G.copy(), verbose="ERROR")
+    H = nx.Graph()
+    H.add_nodes_from(G.nodes())
+    H.add_edges_from(G.edges())          # weight-free copy: unweighted comparison
+    frc = FormanRicci(H, verbose="ERROR")
     frc.compute_ricci_curvature()
     for u, v in G.edges():
         key = (u, v) if (u, v) in mine else (v, u)
