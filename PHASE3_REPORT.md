@@ -77,6 +77,25 @@ next step if Q2 matters downstream.
 - 1D chain: some geometric hypotheses (ring embedding, higher-d structure) are not
   addressable in this geometry at all.
 
+## Addendum (2026-07-02 evening): Q2 like-for-like embedding comparison — POST-HOC EXPLORATORY
+
+The Q2 obstruction (b) above is addressable: score BOTH embeddings with the same
+functional (`avg_distortion`) on the same per-trajectory LCC hop metric — Euclidean MDS
+dim 2 (scale-invariant, no search) vs h-MDS rank 2 with a per-trajectory scale search
+τ ∈ {0.25 … 4} (h-MDS is scale-sensitive; Sala et al. §4). Fresh trajectories (base seed
+777, NOT the sweep's), 100 per point (`experiments/mipt/q2_embedding.py`):
+
+- **Hyperbolic fits better at every (L, p) probed** (euclid − hyper > 0, 5–10σ per point).
+- **The hyperbolic advantage is largest near the transition**: at p=0.12 the gap is
+  +0.017…+0.022 vs +0.008…+0.010 at p=0.08 (all three sizes agree).
+
+Reading: where the emergent metric is nontrivial, it is better described by negatively
+curved space than flat space, most strongly near criticality — directionally the Q2 /
+holographic expectation. Caveats: post-hoc (informs Q2 language only, feeds no certified
+claim); the τ search gives the hyperbolic side a discrete free parameter the Euclidean
+side does not need (mitigated by Euclidean scale-invariance, but the df asymmetry stands);
+graphs remain small. A pre-registered version belongs in any follow-up sweep.
+
 ## Reproduce
 
 ```
