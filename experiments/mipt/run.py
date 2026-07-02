@@ -24,8 +24,13 @@ import numpy as np
 
 from adapters.quantum import trajectory_observables
 from experiments.mipt.circuits import run_trajectory
-from experiments.mipt.stabilizer import mi_matrix, tripartite_mi
+from experiments.mipt.stabilizer import block_mi_matrix, tripartite_mi
 from geometry.config import FROZEN_RECIPE
+
+# Geometry reads the BLOCK MI graph (see block_mi_matrix: site-level pairwise
+# MI is degenerate in scrambled stabilizer states); the I3 control reads site
+# quarters on the identical trajectory.
+BLOCK_SITES = 4
 
 
 def _traj_seed(base: int, L: int, ip: int, k: int) -> int:
@@ -38,7 +43,7 @@ def sweep_point(L: int, p: float, ip: int, ntraj: int, tmult: int, base_seed: in
     for k in range(ntraj):
         sim = run_trajectory(L=L, p=p, T=tmult * L,
                              seed=_traj_seed(base_seed, L, ip, k))
-        obs = trajectory_observables(mi_matrix(sim))
+        obs = trajectory_observables(block_mi_matrix(sim, BLOCK_SITES))
         obs["i3"] = tripartite_mi(sim)
         if keys is None:
             keys = [x for x in obs if x != "n"]
@@ -57,7 +62,7 @@ def sweep_point(L: int, p: float, ip: int, ntraj: int, tmult: int, base_seed: in
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--sizes", default="12,16,20")
+    ap.add_argument("--sizes", default="32,48,64")
     ap.add_argument("--ps", default="0.02,0.05,0.08,0.10,0.12,0.14,0.16,0.18,0.20,0.24,0.30")
     ap.add_argument("--ntraj", type=int, default=100)
     ap.add_argument("--tmult", type=int, default=2)
@@ -72,6 +77,7 @@ def main():
 
     manifest = {"sizes": sizes, "ps": ps, "ntraj": args.ntraj,
                 "tmult": args.tmult, "base_seed": args.base_seed,
+                "block_sites": BLOCK_SITES,
                 "frozen_recipe": FROZEN_RECIPE, "points": []}
     t0 = time.time()
     for L in sizes:

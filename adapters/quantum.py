@@ -70,10 +70,16 @@ def trajectory_observables(M: np.ndarray) -> dict:
     G = mi_graph(M)
     if G.number_of_edges() == 0:
         obs.update({k: float("nan") for k in _NAN_KEYS})
-        obs["lcc_frac"] = 1.0 / n
+        obs.update({"lcc_frac": 1.0 / n, "n_edges": 0, "lr_edges": 0})
         return obs
 
     G, _removed = prune_shortcut_edges(G)         # frozen kernel recipe
+    # Connectivity diagnostics (probe-motivated, 2026-07-02: instrument-health
+    # probes showed edge counts peak near the I3-located transition; recorded
+    # so the sweep can separate connectivity effects from the pre-registered
+    # geometric observables, whose p-dependence was NOT examined pre-sweep).
+    obs["n_edges"] = G.number_of_edges()
+    obs["lr_edges"] = sum(1 for u, v in G.edges() if abs(u - v) >= 2)
     comps = list(nx.connected_components(G))
     lcc = max(comps, key=len)
     obs["lcc_frac"] = len(lcc) / n

@@ -213,6 +213,33 @@ def test_trajectory_is_deterministic_given_seed():
     assert tripartite_mi(a) == pytest.approx(tripartite_mi(b), abs=1e-12)
 
 
+def test_block_mi_anchors():
+    from experiments.mipt.stabilizer import block_mi_matrix
+    # GHZ_8, blocks of 2: every proper region has S = 1 bit, so every block
+    # pair has MI = 1 + 1 - 1 = 1 bit.
+    sim = StabilizerSim(8, seed=0)
+    sim.h(0)
+    for a in range(7):
+        sim.cnot(a, a + 1)
+    M = block_mi_matrix(sim, 2)
+    assert M.shape == (4, 4)
+    off = M[np.triu_indices(4, 1)]
+    assert np.allclose(off, 1.0)
+    # Staggered Bell pairs (1,2),(3,4),(5,6) on L=8, blocks of 2 ({0,1},{2,3},
+    # {4,5},{6,7}): each pair is CUT by a block boundary, so adjacent blocks
+    # share one Bell pair -> MI = 1+1-1... derive block0={0,1}: S=1 (half of
+    # pair (1,2)); block1={2,3}: S=2 (halves of (1,2) and (3,4));
+    # union {0..3}: pair (1,2) internal, (3,4) cut -> S=1; MI(0,1)=1+2-1=2.
+    # Non-adjacent blocks 0 and 2 share nothing -> MI=0.
+    sim = StabilizerSim(8, seed=0)
+    for a in (1, 3, 5):
+        sim.h(a)
+        sim.cnot(a, a + 1)
+    M = block_mi_matrix(sim, 2)
+    assert M[0, 1] == pytest.approx(2.0, abs=1e-12)
+    assert M[0, 2] == pytest.approx(0.0, abs=1e-12)
+
+
 def test_trajectory_limits():
     # p=1: every site measured every layer -> product state -> zero MI.
     sim = run_trajectory(L=8, p=1.0, T=16, seed=5)

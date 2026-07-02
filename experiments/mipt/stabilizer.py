@@ -162,6 +162,33 @@ def mi_matrix(sim: StabilizerSim) -> np.ndarray:
     return M
 
 
+def block_mi_matrix(sim: StabilizerSim, block_size: int) -> np.ndarray:
+    """Pairwise MI between contiguous `block_size`-site blocks, in bits.
+
+    Instrument-repair note (2026-07-02, from a pre-sweep degeneracy probe, no
+    signal consulted): single-site pairwise MI in scrambled stabilizer states
+    is almost everywhere ZERO (entanglement is multipartite — the same fact
+    that makes I3, not pairwise MI, the standard MIPT diagnostic), so the
+    site-level MI graph is degenerate at ALL p. Block MI is not: at L=24,
+    blocks of 4, the fraction of blocks with any MI edge reads 0.98 deep in
+    the entangling phase and decays with p. Geometry is computed on the block
+    graph; the I3 control is untouched (site quarters).
+    """
+    n = sim.n
+    if n % block_size:
+        raise ValueError(f"n={n} not divisible by block_size={block_size}")
+    B = n // block_size
+    blocks = [list(range(i * block_size, (i + 1) * block_size))
+              for i in range(B)]
+    S1 = [sim.entropy(b) for b in blocks]
+    M = np.zeros((B, B))
+    for i in range(B):
+        for j in range(i + 1, B):
+            M[i, j] = M[j, i] = (
+                S1[i] + S1[j] - sim.entropy(blocks[i] + blocks[j]))
+    return M
+
+
 def tripartite_mi(sim: StabilizerSim) -> float:
     """I3(A:B:C) over the first three contiguous quarters of the chain — the
     Constitution's mandated MIPT diagnostic (NOT raw entropy scaling)."""

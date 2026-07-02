@@ -44,6 +44,9 @@ def test_bell_chain_fragments_honestly():
     assert obs["lcc_frac"] == pytest.approx(2 / 8)
     # mean MI over the 28 unordered pairs: 4 pairs at 2 bits -> 8/28.
     assert obs["mean_mi"] == pytest.approx(8 / 28)
+    # connectivity diagnostics: 4 dimer edges, all adjacent-index -> 0 long-range
+    assert obs["n_edges"] == 4
+    assert obs["lr_edges"] == 0
 
 
 def test_ghz_is_one_component_zero_delta():
