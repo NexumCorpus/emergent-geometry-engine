@@ -1,0 +1,6 @@
+{
+ "id": "ege-phase3-mipt-geometry-v1",
+ "statement": "EGE Phase 3 (repo E:/emergent-geometry-engine, master b88b122, PHASE3_REPORT.md): declared verdict SIGNAL - the measurement-induced transition is geometrically distinguished in per-trajectory block-MI graphs (Q1 qualitative; Q2 maximally-hyperbolic NOT established). Reproducible fact: for a fresh 50-trajectory ensemble at L=32, T=64, block=4 from base seed {seed}, the I3 control locates the phases (I3(0.02) < -2 bits, |I3(0.30)| < 0.3) and the geometry is extremal at the transition region (spectral dimension at p=0.12 exceeds both tails by > 0.1; mean Forman curvature at p=0.12 sits below both tails by > 0.2). Margins are ~4x below the gaps measured in the claimed sweep (d_s gap ~0.4, Forman gap ~0.7 at L=32).",
+ "check": ["E:\\_phase0_test_venv\\Scripts\\python.exe", "check.py", "{seed}"],
+ "claimed_seeds": [20260702]
+}
