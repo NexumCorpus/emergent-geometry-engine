@@ -1,7 +1,17 @@
-# Emergent Geometry Engine (EGE)
+<div align="center">
+  <img src="./nexum-hero.svg" alt="Emergent Geometry Engine — geometry for phase change" width="100%" />
 
-A substrate-agnostic instrument that constructs an emergent geometry from any
-correlation / similarity matrix, computes its discrete-geometry invariants
+  <p><strong>Turn correlation into geometry—and geometry into an instrument for phase change.</strong></p>
+
+  <p><a href="#what-it-measures">What it measures</a> · <a href="#quickstart">Quickstart</a> · <a href="#phase-gates">Phase gates</a> · <a href="https://github.com/NexumCorpus">Nexum Corpus</a></p>
+</div>
+
+---
+
+## What it measures
+
+The Emergent Geometry Engine is a substrate-agnostic instrument that constructs
+an emergent geometry from any correlation / similarity matrix, computes its discrete-geometry invariants
 (Ollivier / Lin–Lu–Yau & Forman–Ricci curvature, Gromov δ-hyperbolicity, spectral
 dimension), embeds it (Euclidean + hyperbolic MDS), and uses those invariants as
 **order parameters / early-warning signals** for integration↔fragmentation
