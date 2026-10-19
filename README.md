@@ -28,7 +28,7 @@ the kernel agreeing with itself.
 
 ## Five minutes
 
-Python 3.11+ (developed on 3.13). From a fresh clone:
+Python 3.12+ (`numpy==2.5.0` needs it; developed and CI-tested on 3.13). From a fresh clone:
 
 ```bash
 python -m venv .venv
@@ -39,6 +39,7 @@ pip install -r requirements.txt                         # ~1-2 min
 python -m verify                                        # 11 physics/math checks, ~3 s, prints PASS/FAIL each
 python -m pytest -q                                     # 104 pass, 4 skip (QuTiP optional), ~15 s
 python artifacts/mipt_sweep_v1/bundle/check.py 777      # re-derive the Phase-3 claim on a seed you pick, ~10 s
+python phase0_gate.py                                   # Phase-0 acceptance gate: 13/13 with QuTiP, 12 pass + 1 skip without
 ```
 
 The last command draws a *fresh* 50-trajectory ensemble from your seed and checks
