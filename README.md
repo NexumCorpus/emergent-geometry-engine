@@ -3,12 +3,12 @@
 
   <p><strong>Turn correlation into geometry—and geometry into an instrument for phase change.</strong></p>
 
-  <p><a href="#what-it-measures">What it measures</a> · <a href="#quickstart">Quickstart</a> · <a href="#phase-gates">Phase gates</a> · <a href="https://github.com/NexumCorpus">Nexum Corpus</a></p>
+  <p><a href="#what-it-is">What it is</a> · <a href="#five-minutes">Five minutes</a> · <a href="#evidence">Evidence</a> · <a href="#phase-gates">Phase gates</a> · <a href="https://github.com/NexumCorpus">Nexum Corpus</a></p>
 </div>
 
 ---
 
-## What it measures
+## What it is
 
 The Emergent Geometry Engine is a substrate-agnostic instrument that constructs
 an emergent geometry from any correlation / similarity matrix, computes its discrete-geometry invariants
@@ -17,12 +17,66 @@ dimension), embeds it (Euclidean + hyperbolic MDS), and uses those invariants as
 **order parameters / early-warning signals** for integration↔fragmentation
 transitions.
 
-> **Honest posture.** Calibrated claims only. This is *one shared mathematical
-> object* (graph curvature as an integration–fragmentation order parameter)
-> applied to two substrates (quantum measurement-induced transitions; neural
-> grokking / emergent misalignment). It is an analogy with a shared object, **not**
-> a grand-unified theory. Null results are publishable. We say "haven't seen this
-> done," never "first."
+## Why it matters
+
+Phase transitions in complex systems (a quantum circuit crossing from volume-law to
+area-law entanglement, a network that suddenly generalizes) are usually read off
+one bespoke statistic per field. If the *shape* of the correlation graph moves at
+the transition, one instrument can watch many substrates. This repo tests that idea
+with a verifier that never imports the code it grades, so a passing number is not
+the kernel agreeing with itself.
+
+## Five minutes
+
+Python 3.11+ (developed on 3.13). From a fresh clone:
+
+```bash
+python -m venv .venv
+# Windows:      .venv\Scripts\activate
+# macOS/Linux:  source .venv/bin/activate
+pip install -r requirements.txt                         # ~1-2 min
+
+python -m verify                                        # 11 physics/math checks, ~3 s, prints PASS/FAIL each
+python -m pytest -q                                     # 104 pass, 4 skip (QuTiP optional), ~15 s
+python artifacts/mipt_sweep_v1/bundle/check.py 777      # re-derive the Phase-3 claim on a seed you pick, ~10 s
+```
+
+The last command draws a *fresh* 50-trajectory ensemble from your seed and checks
+ordering assertions (no stored numbers), so it cannot pass on memorized output.
+QuTiP is an **optional** third cross-check (`pip install -r requirements-quantum.txt`);
+the core verifier runs without it via the independent numpy exact-diagonalization path.
+
+## Evidence
+
+| Phase | Result | Where |
+|---|---|---|
+| 0 — kernel + verifier | **PASS**, acceptance gate 13/13 with the actual numbers | [docs/PHASE0_REPORT.md](docs/PHASE0_REPORT.md) |
+| 3 — measurement-induced transition (Clifford circuits, L = 32/48/64, 200 traj/point) | **SIGNAL**: every geometric observable is extremal at the transition located independently by the I₃ control | [PHASE3_REPORT.md](PHASE3_REPORT.md), `artifacts/mipt_sweep_v1/` |
+| 4 — grokking head-to-head (does geometry move *before* test accuracy?) | **NO**, under the frozen pre-registered recipe | [docs/PHASE4_REPORT.md](docs/PHASE4_REPORT.md) |
+
+The Phase-4 null is reported with the same weight as the Phase-3 signal; that is the point.
+
+## What it does not claim
+
+- Not a grand-unified theory. It is *one shared mathematical object* (graph curvature as
+  an integration–fragmentation order parameter) applied to two substrates (quantum
+  measurement-induced transitions; neural grokking). An analogy with a shared object.
+- Not an early-warning signal for grokking: Phase 4 says geometry did not lead in that
+  configuration.
+- Phase 3's maximally-hyperbolic reading (Q2) is **not** established; only the
+  qualitative extremum (Q1) is. Sweep v2 (four sizes, analysis frozen before the data)
+  found the geometric observables locate the transition and sharpen with size but do
+  **not** collapse under one- or two-exponent finite-size scaling, so "order parameter"
+  stays qualitative: no critical-exponent claim.
+- "Haven't seen this done," never "first."
+
+## Where it sits
+
+One of the research instruments of [Nexum Corpus](https://github.com/NexumCorpus) —
+instruments for verifiable machine work. Its generator-≠-grader discipline is the same
+one used across the estate (e.g. the
+[Recursive Discovery Engine](https://github.com/NexumCorpus/recursive-discovery-engine)'s
+frozen holdout). Built by Claude, directed by Nexum Corpus. MIT licensed.
 
 ## Architecture — one kernel, two adapters, two front-ends
 
@@ -87,16 +141,6 @@ geometry/      # the kernel (graph build, curvature, δ, spectral dim, MDS)
 verify/        # the verifier — SEPARATE code path, must not import geometry/
 adapters/      # Adapter Q (quantum MI), Adapter N (neural CKA)
 tests/         # pytest suite (failing tests committed first)
-artifacts/     # generated plots / JSON frames (gitignored)
+artifacts/     # committed evidence: sweep summaries, plots, the Phase-3 claim bundle
 .claude/       # physics-verifier subagent + verification hooks
 ```
-
-## Quickstart
-
-```bash
-.venv/Scripts/python.exe -m verify           # prints PASS/FAIL per check
-.venv/Scripts/python.exe -m pytest -q        # full suite
-```
-
-QuTiP is an **optional** third cross-check (`pip install qutip`); the core
-verifier runs without it via the independent numpy exact-diagonalization path.

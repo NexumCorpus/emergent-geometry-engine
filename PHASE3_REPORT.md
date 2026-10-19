@@ -140,7 +140,7 @@ fourth size and stands unchanged.
 ## Reproduce
 
 ```
-E:\_phase0_test_venv\Scripts\python.exe -m experiments.mipt.run \
+python -m experiments.mipt.run \
   --sizes 32,48,64 --ps 0.02,0.05,0.08,0.10,0.11,0.12,0.13,0.14,0.15,0.17,0.20,0.25,0.30 \
   --ntraj 200 --out artifacts/mipt_sweep_v1
 python -m experiments.mipt.analyze artifacts/mipt_sweep_v1

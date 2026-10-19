@@ -22,7 +22,7 @@ exact values, so the check cannot be satisfied by memorized numbers.
 import sys
 from pathlib import Path
 
-EGE = r"E:\emergent-geometry-engine"
+EGE = str(Path(__file__).resolve().parents[3])  # repo root, wherever it was cloned
 
 L, T, BLOCK, NTRAJ = 32, 64, 4, 50
 P_LOW, P_CRIT, P_HIGH = 0.02, 0.12, 0.30
